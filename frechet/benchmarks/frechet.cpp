@@ -38,8 +38,8 @@ void print_answer( int d, vector<Point> v){
 		
 	}cout<<endl;
 }
-int** dp;
-
+int dp[10000][10000];
+int vs[10000][10000];
 vector<Point> mapa;
 int discreteDistance(int k, int l){
 	if( dp[k][l] != -1 )
@@ -52,6 +52,8 @@ int discreteDistance(int k, int l){
 		dp[k][l] = max(p[k].sqrtDist(q[l]), discreteDistance(0,l-1));
 	else
 		dp[k][l] = max(p[k].sqrtDist(q[l]), min(discreteDistance(k-1,l),min(discreteDistance(k,l-1),discreteDistance(k-1,l-1))));
+
+
 	return dp[k][l];
 }
 vector<Point> parcour;
@@ -61,10 +63,10 @@ void reconstruct(int i, int j, int h){
 	if(i==0 && j==0){ p=Point(i+1,j+1);return;}
 	if( i>0 && j==0){
 		reconstruct(i-1,j,dp[i-1][j]);
-		
+		//reconstruct(i-1,j,h);
 	}else if(i==0 && j>0){
 		reconstruct(i,j-1,dp[i][j-1]);
-		
+		//reconstruct(i,j-1,h);
 	}else{
 		int k,l;
 		k=i,l=j;
@@ -82,20 +84,16 @@ void reconstruct(int i, int j, int h){
 	
 }
 int distanceCalc(){
-	FOR(i,n)FOR(j,m)dp[i][j]=-1;
+	memset(dp,-1,sizeof(dp));
 	return discreteDistance(p.size()-1, q.size()-1);
 }
 
 int main(int argc, char *argv[]){
-	ios_base::sync_with_stdio(0);
 	if(argc<2) return -1;
 	freopen(argv[1],"r",stdin);
-	freopen(argv[2],"w",stdout);
+	//freopen(argv[2],"w",stdout);
 	cin>>n>>m;
-	//cout<<n<<m<<endl;
-		
-	dp = new int *[n];
-	for(int i=0;i<n;i++) dp[i] = new int [m];
+	cout<<n<<m<<endl;
 	read_points( p, n );
 	read_points( q, m );
 	
